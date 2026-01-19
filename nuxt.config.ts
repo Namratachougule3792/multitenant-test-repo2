@@ -1,14 +1,12 @@
-// nuxt.config.ts
 export default defineNuxtConfig({
-  ssr: false,
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-  app: {
-    baseURL: '/',
-  },
+  ssr: true,
   nitro: {
+    preset: 'aws-amplify',
     output: {
-      publicDir: '.output/public'
-    }
+      dir: '.amplify-hosting', // output all server + public here
+    },
+  },
+  app: {
+    baseURL: '/'
   }
 })
