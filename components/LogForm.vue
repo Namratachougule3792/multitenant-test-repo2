@@ -2,6 +2,7 @@
   <div class="card">
     <h2>Send Test Log</h2>
 
+    <!-- Tenant ID input -->
     <input
       v-model="tenantId"
       type="text"
@@ -9,10 +10,20 @@
       class="input"
     />
 
+    <!-- App selector -->
+    <select v-model="selectedApp" class="input">
+      <option value="funds-admission">funds-admission</option>
+      <option value="attendance">attendance</option>
+      <option value="identity-provider">identity-provider</option>
+      <option value="billing">billing</option>
+    </select>
+
+    <!-- Submit button -->
     <button @click="submitLog" class="button">
       Send Log
     </button>
 
+    <!-- Success message -->
     <p v-if="successMessage" class="success">
       {{ successMessage }}
     </p>
@@ -23,19 +34,28 @@
 import { ref } from 'vue'
 
 const tenantId = ref('')
+const selectedApp = ref('funds-admission')
 const successMessage = ref('')
 
-function submitLog() {
+async function submitLog() {
   if (!tenantId.value) {
     successMessage.value = 'Please enter tenantId'
     return
   }
 
-  // TEMP frontend-only success
-  successMessage.value = `Log submitted successfully for tenant: ${tenantId.value}`
+  try {
+    const response = await fetch(
+      `/api/log?tenantId=${tenantId.value}&app=${selectedApp.value}`
+    )
 
-  // clear input
-  tenantId.value = ''
+    const data = await response.json()
+
+    successMessage.value = `Log submitted for tenant ${data.tenantId} using app ${data.app}`
+
+    tenantId.value = ''
+  } catch (error) {
+    successMessage.value = 'Failed to send log'
+  }
 }
 </script>
 
