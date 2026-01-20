@@ -1,42 +1,21 @@
 export default defineEventHandler((event) => {
   const query = getQuery(event)
 
-  // Read inputs from frontend
   const tenantId = query.tenantId || 'unknown'
-  const app = query.app || 'gurukul-os'
+  const app = query.app || 'unknown'
 
-  /**
-   * CloudWatch Embedded Metrics Format (EMF)
-   * This will automatically create:
-   * Namespace: GurukulOS
-   * Metric: Usage
-   * Dimensions: tenant, app
-   */
-  console.log(JSON.stringify({
-    _aws: {
-      Timestamp: Date.now(),
-      CloudWatchMetrics: [
-        {
-          Namespace: "GurukulOS",
-          Dimensions: [["tenant", "app"]],
-          Metrics: [
-            {
-              Name: "Usage",
-              Unit: "Count"
-            }
-          ]
-        }
-      ]
-    },
+  const logPayload = {
+    type: 'TENANT_USAGE',
     tenant: tenantId,
     app: app,
-    Usage: 1
-  }))
+    message: 'This is a test log'
+  }
+
+  console.log(JSON.stringify(logPayload))
 
   return {
     success: true,
     tenantId,
-    app,
-    message: 'Usage logged successfully'
+    app
   }
 })
