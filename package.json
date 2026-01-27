@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "nuxt": "3.19.3"
+    "nuxt": "3.19.3",
+    "aws-sdk": "^2.1530.0"
   }
 }
